@@ -18,7 +18,8 @@ public class StockHelpCommand implements Command{
 
         String firstName = update.getMessage().getFrom().getFirstName();
 
-        return firstName + ", para adicionar ações a sua carteira basta inserir o código delas separando por vírgula ( , ). " +
-                "\n\nExemplo: BBAS3.SA, MGLU3.SA ...";
+        return firstName + ", para adicionar ações a sua carteira basta digita \"/adicionar\" " +
+                " mais o código das ações separando por vírgula ( , ). " +
+                "\n\nExemplo: /adicionar BBAS3.SA, MGLU3.SA ...";
     }
 }
