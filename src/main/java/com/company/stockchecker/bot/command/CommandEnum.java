@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Getter
 public enum CommandEnum {
 
-    STOCK_ADD("/ADICIONAR"), STOCK_DELETE("/DELETAR"), STOCK_HELP("/AJUDA");
+    STOCK_ADD("/ADICIONAR"), STOCK_DELETE("/DELETAR"), STOCK_HELP("/AJUDA"), STOCK_GET("/CARTEIRA");
 
     private String command;
 

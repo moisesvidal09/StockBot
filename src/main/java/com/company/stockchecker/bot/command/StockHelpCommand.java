@@ -1,10 +1,9 @@
 package com.company.stockchecker.bot.command;
 
-import lombok.Data;
+
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@Data
 @Component
 public class StockHelpCommand implements Command{
 
@@ -14,7 +13,7 @@ public class StockHelpCommand implements Command{
     }
 
 
-    public String helpText(Update update) {
+    private String helpText(Update update) {
 
         String firstName = update.getMessage().getFrom().getFirstName();
 

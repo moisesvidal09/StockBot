@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
-public class User extends BaseEntity{
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,10 @@ public class User extends BaseEntity{
 
     @NotNull
     @Column(name = "chat_id")
-    private String chatId;
+    private Long chatId;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Stock> stocks;
 
 }
