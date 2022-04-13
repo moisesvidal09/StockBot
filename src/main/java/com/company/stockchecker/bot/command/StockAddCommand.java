@@ -1,6 +1,7 @@
 package com.company.stockchecker.bot.command;
 
 
+import com.company.stockchecker.BotException;
 import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.User;
 import com.company.stockchecker.service.StockService;
@@ -33,6 +34,9 @@ public class StockAddCommand implements Command {
 
         text = text.replace(CommandEnum.STOCK_ADD.getCommand(), "").trim();
 
+        if ("".equalsIgnoreCase(text))
+             throw new BotException("Was not possible to identify stocks requested");
+
         return Arrays.stream(text.split(","))
                 .map(String::trim)
                 .collect(Collectors.toList());
@@ -49,16 +53,29 @@ public class StockAddCommand implements Command {
                                                     .build())
                                             .collect(Collectors.toSet());
 
-        User user = User.builder()
-                .chatId(update.getMessage().getChatId())
-                .stocks(stocks)
-                .build();
-
-        userService.create(user);
+        this.saveUser(update, stocks);
 
         String firstName = update.getMessage().getFrom().getFirstName();
 
         return firstName + ", foram adicionadas as ações "
                 + Strings.join(stocksRequested, ',') + " com sucesso !"  ;
+    }
+
+    private void saveUser(Update update, Set<Stock> stocks){
+
+        User user = User.builder()
+                .chatId(update.getMessage().getChatId())
+                .stocks(stocks)
+                .build();
+
+        boolean userNotExistsByChatId = !userService.existsByChatId(user.getChatId());
+
+        if (userNotExistsByChatId)
+             userService.create(user);
+        else {
+            user = userService.getByChatId(user.getChatId());
+            user.getStocks().addAll(stocks);
+            userService.update(user);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.company.stockchecker.bot;
 
+import com.company.stockchecker.BotException;
 import com.company.stockchecker.bot.command.Command;
 import com.company.stockchecker.bot.command.CommandEnum;
 import com.company.stockchecker.bot.command.factory.CommandFactory;
@@ -46,10 +47,10 @@ public class StockBot extends TelegramLongPollingBot {
                 Command commandRequested = commandFactory.getCommand(commandEnum);
                 response = commandRequested.handleRequest(update);
 
-            } catch (IllegalArgumentException e){
+            } catch (BotException e){
 
-                logger.warning("Cannot identify command " + update.getMessage() + "\n" + e.getMessage());
-                response = "Cannot identify command, please try again";
+                logger.warning("Error processing request " + e.getMessage());
+                response = e.getMessage();
 
             }
 

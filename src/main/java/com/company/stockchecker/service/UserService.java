@@ -54,4 +54,8 @@ public class UserService implements CrudService<User>{
 
         userRepository.deleteById(id);
     }
+
+    public boolean existsByChatId(Long chadId){
+        return userRepository.findByChatId(chadId).isPresent();
+    }
 }
