@@ -1,4 +1,4 @@
-package com.company.stockchecker;
+package com.company.stockchecker.exception;
 
 public class BotException extends RuntimeException{
 

@@ -1,7 +1,7 @@
 package com.company.stockchecker.bot.command;
 
 
-import com.company.stockchecker.BotException;
+import com.company.stockchecker.exception.BotException;
 import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.User;
 import com.company.stockchecker.service.StockService;

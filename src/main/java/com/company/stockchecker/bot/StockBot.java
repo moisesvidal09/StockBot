@@ -1,6 +1,6 @@
 package com.company.stockchecker.bot;
 
-import com.company.stockchecker.BotException;
+import com.company.stockchecker.exception.BotException;
 import com.company.stockchecker.bot.command.Command;
 import com.company.stockchecker.bot.command.CommandEnum;
 import com.company.stockchecker.bot.command.factory.CommandFactory;
