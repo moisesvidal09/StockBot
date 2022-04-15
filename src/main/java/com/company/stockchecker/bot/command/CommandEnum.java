@@ -1,5 +1,6 @@
 package com.company.stockchecker.bot.command;
 
+import com.company.stockchecker.exception.BotException;
 import lombok.Getter;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -25,9 +26,9 @@ public enum CommandEnum {
 
     public static CommandEnum getByText(Update update) {
         if(!update.hasMessage())
-            throw new IllegalArgumentException("No message");
+            throw new BotException("No message");
         if(!update.getMessage().hasEntities() || update.getMessage().getEntities().isEmpty())
-            throw new IllegalArgumentException("It doesn't look like a command for me");
+            throw new BotException("It doesn't look like a command for me");
 
         String command = update.getMessage()
                 .getEntities()
