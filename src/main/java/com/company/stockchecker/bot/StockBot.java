@@ -10,6 +10,8 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import javax.persistence.EntityNotFoundException;
 import java.util.logging.Logger;
 
 @Component
@@ -52,6 +54,10 @@ public class StockBot extends TelegramLongPollingBot {
                 logger.warning("Error processing request " + e.getMessage());
                 response = e.getMessage();
 
+            } catch (EntityNotFoundException e) {
+
+                logger.warning("Error processing request " + e.getMessage());
+                response = "Você não tem ações cadastras, tente /ajuda.";
             }
 
             sendMessageTo(response, chatId);

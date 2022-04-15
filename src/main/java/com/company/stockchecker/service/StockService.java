@@ -25,7 +25,7 @@ public class StockService implements CrudService<Stock> {
         this.stockRepository = stockRepository;
     }
 
-    public List<StockDTO> getStocksFromAPI(List<String> stocks){
+    public List<StockDTO> getStocksPriceFromAPI(List<String> stocks){
 
         String URI = stockConfig.getStockUrl() + String.join(",", stocks);
 
@@ -39,7 +39,7 @@ public class StockService implements CrudService<Stock> {
 
     public Set<Stock> findAllDistinctCode(){
         return stockRepository.findAllDistinctCode()
-                .orElse(new HashSet<>());
+                .orElse(Collections.EMPTY_SET);
     }
 
     @Override
@@ -75,4 +75,5 @@ public class StockService implements CrudService<Stock> {
 
         stockRepository.deleteById(id);
     }
+
 }

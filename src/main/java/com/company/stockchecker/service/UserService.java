@@ -19,7 +19,7 @@ public class UserService implements CrudService<User>{
 
     public User getByChatId(Long chatId){
         return userRepository.findByChatId(chatId)
-                .orElseThrow(() -> new EntityNotFoundException("User with chatId " + chatId + "not found !"));
+                .orElseThrow(() -> new EntityNotFoundException("User with chatId " + chatId + " not found !"));
     }
 
     @Override
