@@ -1,16 +1,19 @@
 package com.company.stockchecker.entity.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
-public class YahooApiResponseDTO {
+import java.util.List;
 
-    @JsonProperty("quoteResponse")
-    private StockApiDTO stockApiDTO;
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+@Data
+public class NewsApiResponseDTO {
+
+    @JsonProperty("articles")
+    private List<NewsDTO> news;
 
 }
