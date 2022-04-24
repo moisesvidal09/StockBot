@@ -13,7 +13,7 @@ public class CommandFactory {
     private final StockHelpCommand stockHelpCommand;
     private final StockAddCommand stockAddCommand;
     private final StockGetCommand stockGetCommand;
-    private Map<CommandEnum, Command> commands = new HashMap<>();
+    private final Map<CommandEnum, Command> commands = new HashMap<>();
 
 
     public CommandFactory(StockHelpCommand stockHelpCommand, StockAddCommand stockAddCommand, StockGetCommand stockGetCommand) {
