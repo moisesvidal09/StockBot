@@ -6,9 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication
-@PropertySources({
-		@PropertySource("classpath:application-${spring.profiles.active}.properties")
-})
 public class StockCheckerApplication {
 
 	public static void main(String[] args) {
