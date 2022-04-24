@@ -79,6 +79,45 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.36.0</version>
+				<dependencies>
+					<dependency>
+						<groupId>joda-time</groupId>
+						<artifactId>joda-time</artifactId>
+						<version>2.10.2</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<images>
+						<image>
+							<name>${project.groupId}/${project.artifactId}:${project.version}</name>
+							<alias>${project.version}</alias>
+							<build>
+								<from>openjdk:8</from>
+								<assembly>
+									<descriptorRef>artifact</descriptorRef>
+								</assembly>
+								<ports>
+									<port>8888</port>
+								</ports>
+								<cmd>java -jar maven/${project.name}-${project.version}.jar</cmd>
+							</build>
+							<run>
+								<ports>
+									<port>8888:8888</port>
+								</ports>
+							</run>
+						</image>
+					</images>
+					<startParallel>true</startParallel>
+					<showLogs>true</showLogs>
+					<logStdout>true</logStdout>
+					<follow>true</follow>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
