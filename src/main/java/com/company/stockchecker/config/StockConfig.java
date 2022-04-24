@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class StockConfig {
 
-    @Value("${stock.url}")
-    private String stockUrl;
+    @Value("${stock.news.url}")
+    private String stockNewsUrl;
 
     @Value("${api.key}")
     private String apiKey;
