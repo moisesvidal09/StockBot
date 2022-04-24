@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,4 +20,8 @@ public class Stock{
 
     @NotNull
     private String code;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<News> news;
+
 }
