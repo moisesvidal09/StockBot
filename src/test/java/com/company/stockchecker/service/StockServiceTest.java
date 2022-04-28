@@ -1,8 +1,12 @@
 package com.company.stockchecker.service;
 import com.company.stockchecker.config.StockConfig;
 import com.company.stockchecker.entity.Stock;
+import com.company.stockchecker.entity.dto.NewsApiResponseDTO;
+import com.company.stockchecker.entity.dto.NewsDTO;
+import com.company.stockchecker.entity.dto.SourceDTO;
 import com.company.stockchecker.entity.dto.StockDTO;
 import com.company.stockchecker.repository.StockRepository;
+import com.company.stockchecker.util.TestUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +18,11 @@ import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityNotFoundException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -40,18 +44,19 @@ public class StockServiceTest {
    @Mock
    private StockRepository stockRepository;
 
+   private final TestUtil util = new TestUtil();
 
    @Before
    public void setup(){
       this.stockService = new StockService(this.restService, this.stockConfig, this.stockRepository);
 
       final Stock stock = Stock.builder()
-              .id(this.randomLong())
+              .id(util.randomLong())
               .code("BBAS3")
               .build();
 
       final Stock stock2 = Stock.builder()
-              .id(this.randomLong())
+              .id(util.randomLong())
               .code("MGLU3")
               .build();
 
@@ -63,7 +68,7 @@ public class StockServiceTest {
    public void shouldSaveStock() {
       when(this.stockRepository.save(any(Stock.class)))
               .thenReturn(Stock.builder()
-                                 .id(randomLong())
+                                 .id(util.randomLong())
                                  .code("BBAS3")
                                  .build());
 
@@ -87,7 +92,7 @@ public class StockServiceTest {
    @Test
    public void shouldThrownEntityNotFoundWhenStockNotExist(){
 
-      Long stockId = this.randomLong();
+      Long stockId = util.randomLong();
 
       assertThatThrownBy(() -> this.stockService.getById(stockId))
               .isInstanceOf(EntityNotFoundException.class)
@@ -102,7 +107,7 @@ public class StockServiceTest {
 
    @Test
    public void shouldThrownEntityNotFoundExceptionWhenDeleteStockNonexistent(){
-      final Long id = this.randomLong();
+      final Long id = util.randomLong();
 
       assertThatThrownBy(() -> this.stockService.delete(id))
               .isInstanceOf(EntityNotFoundException.class)
@@ -112,7 +117,7 @@ public class StockServiceTest {
    }
 
    @Test
-   public void shouldReturnAnEmptyList(){
+   public void shouldReturnAnEmptyListWhenArgumentIsNull(){
 
       List<StockDTO> stockDTOS = this.stockService.getStocksNews(null);
 
@@ -127,8 +132,39 @@ public class StockServiceTest {
       Assert.assertTrue(stockDTOS.isEmpty());
    }
 
-   private long randomLong() {
-      return ThreadLocalRandom.current().nextLong(1000L);
+   @Test
+   public void shouldReturnStockWithNews(){
+      final NewsDTO newsDTO = NewsDTO.builder()
+              .author("UOL")
+              .source(SourceDTO.builder().name("UOL").build())
+              .title("B3 BBASE3")
+              .description("DESCRIPTION")
+              .url("www.google.com")
+              .publishedAt(LocalDateTime.now())
+              .content("content")
+              .build();
+
+      final NewsDTO newsDTO2 = NewsDTO.builder()
+              .author("GLOBO")
+              .source(SourceDTO.builder().name("GLOBO").build())
+              .title("B3 MGLU3")
+              .description("DESCRIPTION")
+              .url("www.globo.com")
+              .publishedAt(LocalDateTime.now())
+              .content("content")
+              .build();
+
+      final NewsApiResponseDTO newsApiResponseDTO = NewsApiResponseDTO.builder()
+              .news(Arrays.asList(newsDTO, newsDTO2))
+              .build();
+
+      when(this.restService.makeRequest(any(), any(), any(), any(), any())).thenReturn(newsApiResponseDTO);
+
+      List<StockDTO> stockDTOS = this.stockService.getStocksNews(Arrays.asList("MGLU33", "BBASE33"));
+
+      Assert.assertNotNull(stockDTOS);
+
+      verify(this.restService, times(1)).makeRequest(any(), any(), any(), any(), any());
    }
 
 }
