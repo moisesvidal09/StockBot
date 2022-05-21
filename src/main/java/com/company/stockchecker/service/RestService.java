@@ -34,6 +34,7 @@ public class RestService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
+
     public String encodeUrlUTF8(String URL){
 
         try {
