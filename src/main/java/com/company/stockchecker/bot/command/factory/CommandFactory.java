@@ -13,13 +13,15 @@ public class CommandFactory {
     private final StockHelpCommand stockHelpCommand;
     private final StockAddCommand stockAddCommand;
     private final StockGetCommand stockGetCommand;
+    private final StockDeleteCommand stockDeleteCommand;
     private final Map<CommandEnum, Command> commands = new HashMap<>();
 
 
-    public CommandFactory(StockHelpCommand stockHelpCommand, StockAddCommand stockAddCommand, StockGetCommand stockGetCommand) {
+    public CommandFactory(StockHelpCommand stockHelpCommand, StockAddCommand stockAddCommand, StockGetCommand stockGetCommand, StockDeleteCommand stockDeleteCommand) {
         this.stockHelpCommand = stockHelpCommand;
         this.stockAddCommand = stockAddCommand;
         this.stockGetCommand = stockGetCommand;
+        this.stockDeleteCommand = stockDeleteCommand;
     }
 
      private void initializeMap(){
@@ -27,6 +29,7 @@ public class CommandFactory {
         commands.put(CommandEnum.STOCK_HELP, stockHelpCommand);
         commands.put(CommandEnum.STOCK_ADD, stockAddCommand);
         commands.put(CommandEnum.STOCK_GET, stockGetCommand);
+        commands.put(CommandEnum.STOCK_DELETE, stockDeleteCommand);
 
     }
 

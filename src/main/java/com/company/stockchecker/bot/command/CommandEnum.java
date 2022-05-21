@@ -9,7 +9,7 @@ public enum CommandEnum {
 
     STOCK_ADD("/ADICIONAR"), STOCK_DELETE("/DELETAR"), STOCK_HELP("/AJUDA"), STOCK_GET("/CARTEIRA");
 
-    private String command;
+    private final String command;
 
     CommandEnum(String command) {
         this.command = command;
