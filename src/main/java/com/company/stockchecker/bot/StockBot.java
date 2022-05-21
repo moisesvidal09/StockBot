@@ -39,29 +39,30 @@ public class StockBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if(update.hasMessage() && update.getMessage().hasText()){
-            String chatId = String.valueOf(update.getMessage().getChatId());
-            String response;
+        if(!update.hasMessage() && !update.getMessage().hasText())
+            return;
 
-            try {
+        String chatId = String.valueOf(update.getMessage().getChatId());
+        String response;
 
-                CommandEnum commandEnum = CommandEnum.getByText(update);
-                Command commandRequested = commandFactory.getCommand(commandEnum);
-                response = commandRequested.handleRequest(update);
+        try {
 
-            } catch (BotException e){
+            CommandEnum commandEnum = CommandEnum.getByText(update);
+            Command commandRequested = commandFactory.getCommand(commandEnum);
+            response = commandRequested.handleRequest(update);
 
-                logger.warning("Error processing request " + e.getMessage());
-                response = e.getMessage();
+        } catch (BotException e){
 
-            } catch (EntityNotFoundException e) {
+            logger.warning("Error processing request " + e.getMessage());
+            response = e.getMessage();
 
-                logger.warning("Error processing request " + e.getMessage());
-                response = "Você não tem ações cadastras, tente /ajuda.";
-            }
+        } catch (EntityNotFoundException e) {
 
-            sendMessageTo(response, chatId);
+            logger.warning("Error processing request " + e.getMessage());
+            response = "Você não tem ações cadastras, tente /ajuda.";
         }
+
+        sendMessageTo(response, chatId);
     }
 
     public void sendMessageTo(String message, String chatId) {
