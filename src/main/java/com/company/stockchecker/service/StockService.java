@@ -67,7 +67,7 @@ public class StockService implements CrudService<Stock> {
         return stockDTOS;
     }
 
-    public Set<Stock> findAllDistinctCode(){
+    public Set<String> findAllDistinctCode(){
         return stockRepository.findAllDistinctCode()
                 .orElse(Collections.emptySet());
     }

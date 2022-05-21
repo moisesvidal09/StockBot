@@ -11,6 +11,6 @@ import java.util.Set;
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
     @Query("SELECT DISTINCT s.code FROM Stock s")
-    Optional<Set<Stock>> findAllDistinctCode();
+    Optional<Set<String>> findAllDistinctCode();
 
 }
