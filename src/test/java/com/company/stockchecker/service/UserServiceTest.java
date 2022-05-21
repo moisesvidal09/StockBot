@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -27,17 +28,13 @@ import static org.mockito.Mockito.*;
 @ActiveProfiles("test")
 public class UserServiceTest {
 
+    @InjectMocks
     private UserService userService;
 
     @Mock
     private UserRepository userRepository;
 
     private final TestUtil util = new TestUtil();
-
-    @Before
-    public void setup() {
-        this.userService = new UserService(userRepository);
-    }
 
     @Test
     public void shouldReturnUserByChatId(){

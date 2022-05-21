@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,9 +21,6 @@ import javax.persistence.EntityNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -33,6 +31,7 @@ import static org.mockito.Mockito.*;
 @ActiveProfiles("test")
 public class StockServiceTest {
 
+   @InjectMocks
    private StockService stockService;
 
    @Mock
@@ -48,7 +47,6 @@ public class StockServiceTest {
 
    @Before
    public void setup(){
-      this.stockService = new StockService(this.restService, this.stockConfig, this.stockRepository);
 
       final Stock stock = Stock.builder()
               .id(util.randomLong())
