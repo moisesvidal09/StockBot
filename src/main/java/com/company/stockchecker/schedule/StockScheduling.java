@@ -60,11 +60,11 @@ public class StockScheduling {
     }
 
     // every 5 minutes, is used to prevent heroku from putting application to sleep mode,
-    //@Scheduled(cron = "0 */5 * * * *", zone = "America/Sao_Paulo")
-    @Scheduled(cron = "* * * * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 */5 * * * *", zone = "America/Sao_Paulo")
     private void pingSelf() {
         logger.info("Pinging heartbeat");
-        this.restService.makeRequest("localhost:8888/api/v1/heartbeat", "Connection", "keep-alive", String.class, HttpMethod.GET);
+        this.restService.makeRequest(schedulingConfig.getAppUrl() + "/api/v1/heartbeat",
+                "Connection", "keep-alive", String.class, HttpMethod.GET);
     }
 
     private void sentStockNewsToAllUsers(final List<User> users, final List<StockDTO> stocksNews){
