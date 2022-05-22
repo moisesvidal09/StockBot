@@ -10,8 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.EntityNotFoundException;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
@@ -40,7 +45,7 @@ public class StockService implements CrudService<Stock> {
 
         String URL = stockConfig.getStockNewsUrl() + stockRequested;
 
-       // URI += "&from=" + LocalDate.now() + "&to=" + LocalDate.now();
+        URL += "&from=" + LocalDate.now() + "&to=" + LocalDate.now();
 
         NewsApiResponseDTO apiResponse = restService
                 .makeRequest(URL, "X-API-KEY", stockConfig.getApiKey(), NewsApiResponseDTO.class, HttpMethod.GET);
