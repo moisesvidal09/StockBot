@@ -4,6 +4,7 @@ import com.company.stockchecker.entity.dto.StockDTO;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 public class MessageUtil {
 
@@ -15,6 +16,9 @@ public class MessageUtil {
         stocksNews.forEach(stock -> {
 
             sb.append(stock.getSymbol()).append("\n\n");
+
+            if(Objects.isNull(stock.getNews()) || stock.getNews().isEmpty())
+                sb.append("Sem novidades para essa ação").append("\n\n");
 
             stock.getNews()
                     .forEach(news -> {
