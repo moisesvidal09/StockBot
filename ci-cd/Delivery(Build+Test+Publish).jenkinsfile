@@ -15,6 +15,7 @@ pipeline {
     environment {
         SONAR_ADDRESS='http://sonarqube:9000'
         NEXUS_ADDRESS='http://nexus:8081'
+        SONAR_PROJECT_KEY='stock-bot-key'
     }
 
     stages {
@@ -34,7 +35,7 @@ pipeline {
         stage("Sonar"){
             steps {
                 withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]){
-                    sh "mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=$SONAR_ADDRESS"
+                    sh "mvn sonar:sonar -Dsonar.login=b7a2e39e0212e2151a434e21183a03e93c535870 -Dsonar.host.url=$SONAR_ADDRESS -Dsonar.project.key=stock-bot-key"
                 }
             }
         }

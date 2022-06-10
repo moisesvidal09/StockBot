@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Entity
+@Entity(name = "user_app")
 public class User{
 
     @Id
@@ -23,7 +23,13 @@ public class User{
     private Long chatId;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_stock", joinColumns = {
+            @JoinColumn(name = "user_id")
+    },
+    inverseJoinColumns = {
+            @JoinColumn(name = "stock_id")
+    })
     private Set<Stock> stocks;
 
 }
