@@ -1,9 +1,9 @@
 package com.company.stockchecker.bot.command;
 
 
-import com.company.stockchecker.exception.BotException;
 import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.User;
+import com.company.stockchecker.exception.BotException;
 import com.company.stockchecker.service.StockService;
 import com.company.stockchecker.service.UserService;
 import org.apache.logging.log4j.util.Strings;

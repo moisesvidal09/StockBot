@@ -1,10 +1,10 @@
 package com.company.stockchecker.bot;
 
-import com.company.stockchecker.exception.BotException;
 import com.company.stockchecker.bot.command.Command;
 import com.company.stockchecker.bot.command.CommandEnum;
 import com.company.stockchecker.bot.command.factory.CommandFactory;
 import com.company.stockchecker.config.TelegramConfig;
+import com.company.stockchecker.exception.BotException;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

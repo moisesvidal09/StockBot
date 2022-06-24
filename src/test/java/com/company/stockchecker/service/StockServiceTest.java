@@ -1,4 +1,5 @@
 package com.company.stockchecker.service;
+
 import com.company.stockchecker.config.StockConfig;
 import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.dto.NewsApiResponseDTO;
@@ -18,9 +19,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityNotFoundException;
-
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.then;

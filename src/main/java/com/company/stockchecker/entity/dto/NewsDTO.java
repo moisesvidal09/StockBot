@@ -1,6 +1,5 @@
 package com.company.stockchecker.entity.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDateTime;
