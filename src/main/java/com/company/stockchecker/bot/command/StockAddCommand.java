@@ -4,8 +4,7 @@ package com.company.stockchecker.bot.command;
 import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.User;
 import com.company.stockchecker.exception.BotException;
-import com.company.stockchecker.service.StockService;
-import com.company.stockchecker.service.UserService;
+import com.company.stockchecker.service.IUserService;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -20,13 +19,12 @@ import java.util.stream.Collectors;
 @Component
 public class StockAddCommand implements Command {
 
-    private final StockService stockService;
-    private final UserService userService;
+    private final IUserService userService;
 
-    public StockAddCommand(StockService stockService, UserService userService) {
-        this.stockService = stockService;
+    public StockAddCommand(IUserService userService) {
         this.userService = userService;
     }
+
 
     private List<String> retrieveStocksFromUserText(Update update){
 

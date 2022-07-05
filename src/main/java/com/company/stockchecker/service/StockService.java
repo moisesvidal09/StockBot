@@ -21,7 +21,7 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 @Service
-public class StockService implements CrudService<Stock> {
+public class StockService implements IStockService {
 
     private final RestService restService;
     private final StockConfig stockConfig;
@@ -34,6 +34,7 @@ public class StockService implements CrudService<Stock> {
         this.stockRepository = stockRepository;
     }
 
+    @Override
     public List<StockDTO> getStocksNews(List<String> stocks){
 
         if (stocks == null || stocks.isEmpty()){
@@ -72,6 +73,7 @@ public class StockService implements CrudService<Stock> {
         return stockDTOS;
     }
 
+    @Override
     public Set<String> findAllDistinctCode(){
         return stockRepository.findAllDistinctCode()
                 .orElse(Collections.emptySet());

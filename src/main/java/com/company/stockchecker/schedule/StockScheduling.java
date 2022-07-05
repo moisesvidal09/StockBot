@@ -1,15 +1,11 @@
 package com.company.stockchecker.schedule;
 
 import com.company.stockchecker.bot.StockBot;
-import com.company.stockchecker.config.GreetingsConfig;
 import com.company.stockchecker.config.SchedulingConfig;
-import com.company.stockchecker.config.TelegramConfig;
 import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.User;
 import com.company.stockchecker.entity.dto.StockDTO;
-import com.company.stockchecker.service.RestService;
-import com.company.stockchecker.service.StockService;
-import com.company.stockchecker.service.UserService;
+import com.company.stockchecker.service.*;
 import com.company.stockchecker.util.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,24 +22,21 @@ import java.util.stream.Collectors;
 public class StockScheduling {
 
     private final Logger logger = LoggerFactory.getLogger(StockScheduling.class);
-    private final TelegramConfig telegramConfig;
-    private final GreetingsConfig greetingsConfig;
     private final SchedulingConfig schedulingConfig;
     private final StockBot stockBot;
-    private final UserService userService;
-    private final StockService stockService;
+    private final IUserService userService;
+    private final IStockService stockService;
     private final RestService restService;
 
-    public StockScheduling(TelegramConfig telegramConfig, GreetingsConfig greetingsConfig, SchedulingConfig schedulingConfig,
-                           StockBot stockBot, UserService userService, StockService stockService, RestService restService) {
-        this.telegramConfig = telegramConfig;
-        this.greetingsConfig = greetingsConfig;
+    public StockScheduling(SchedulingConfig schedulingConfig, StockBot stockBot,
+                           IUserService userService, IStockService stockService, RestService restService) {
         this.schedulingConfig = schedulingConfig;
         this.stockBot = stockBot;
         this.userService = userService;
         this.stockService = stockService;
         this.restService = restService;
     }
+
 
     // 08:00 every day
     @Scheduled(cron = "0 0 8 * * 1-5", zone = "America/Sao_Paulo")

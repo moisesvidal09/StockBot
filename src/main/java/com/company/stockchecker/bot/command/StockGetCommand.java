@@ -3,8 +3,8 @@ package com.company.stockchecker.bot.command;
 import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.User;
 import com.company.stockchecker.entity.dto.StockDTO;
-import com.company.stockchecker.service.StockService;
-import com.company.stockchecker.service.UserService;
+import com.company.stockchecker.service.IStockService;
+import com.company.stockchecker.service.IUserService;
 import com.company.stockchecker.util.MessageUtil;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 @Component
 public class StockGetCommand implements Command{
 
-    private final UserService userService;
-    private final StockService stockService;
+    private final IUserService userService;
+    private final IStockService stockService;
 
-    public StockGetCommand(UserService userService, StockService stockService) {
+    public StockGetCommand(IUserService userService, IStockService stockService) {
         this.userService = userService;
         this.stockService = stockService;
     }

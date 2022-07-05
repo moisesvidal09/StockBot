@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements CrudService<User>{
+public class UserService implements IUserService{
 
     private final UserRepository userRepository;
 
@@ -17,6 +17,7 @@ public class UserService implements CrudService<User>{
         this.userRepository = userRepository;
     }
 
+    @Override
     public User getByChatId(Long chatId){
         return userRepository.findByChatId(chatId)
                 .orElseThrow(() -> new EntityNotFoundException("User with chatId " + chatId + " not found !"));
@@ -55,6 +56,7 @@ public class UserService implements CrudService<User>{
         userRepository.deleteById(id);
     }
 
+    @Override
     public boolean existsByChatId(Long chadId){
         return userRepository.findByChatId(chadId).isPresent();
     }
