@@ -22,6 +22,7 @@ public class CommandFactory {
         this.stockAddCommand = stockAddCommand;
         this.stockGetCommand = stockGetCommand;
         this.stockDeleteCommand = stockDeleteCommand;
+        initializeMap();
     }
 
      private void initializeMap(){
@@ -34,16 +35,8 @@ public class CommandFactory {
     }
 
     public Command getCommand(CommandEnum commandEnum){
-        return Optional.ofNullable(getInstance().get(commandEnum)).
+        return Optional.ofNullable(this.commands.get(commandEnum)).
                 orElseThrow(() -> new IllegalArgumentException("Command "+ commandEnum + " not found !"));
-    }
-
-    private Map<CommandEnum, Command> getInstance(){
-
-         if (this.commands.isEmpty())
-              initializeMap();
-
-         return this.commands;
     }
 
 }
