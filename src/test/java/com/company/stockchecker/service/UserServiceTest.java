@@ -32,31 +32,29 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    private final TestUtil util = new TestUtil();
-
     @Test
     public void shouldReturnUserByChatId(){
 
         Set<Stock> stocks = Stream.of(
                         Stock.builder()
-                                .id(util.randomLong())
+                                .id(TestUtil.randomLong())
                                 .code("BBASE3")
                                 .build(),
                         Stock.builder()
-                                .id(util.randomLong())
+                                .id(TestUtil.randomLong())
                                 .code("MGLU3")
                                 .build())
                 .collect(Collectors.toSet());
 
         final User user = User.builder()
-                .id(util.randomLong())
+                .id(TestUtil.randomLong())
                 .chatId(342341L)
                 .stocks(stocks)
                 .build();
 
         when(userRepository.findByChatId(Mockito.anyLong())).thenReturn(Optional.ofNullable(user));
 
-        User userRetrieved = this.userService.getByChatId(util.randomLong());
+        User userRetrieved = this.userService.getByChatId(TestUtil.randomLong());
 
         Assert.assertNotNull(userRetrieved);
 
@@ -67,7 +65,7 @@ public class UserServiceTest {
     @Test
     public void shouldThrownEntityNotFoundWhenFindByChatId(){
 
-        final Long chatId = util.randomLong();
+        final Long chatId = TestUtil.randomLong();
 
         assertThatThrownBy(() -> this.userService.getByChatId(chatId))
                 .isInstanceOf(EntityNotFoundException.class)

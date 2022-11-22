@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TestUtil {
 
-    public long randomLong() {
+    public static long randomLong() {
         return ThreadLocalRandom.current().nextLong(1000L);
     }
 
