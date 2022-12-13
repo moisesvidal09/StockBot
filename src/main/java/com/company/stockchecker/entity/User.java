@@ -4,7 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -31,5 +33,13 @@ public class User{
             @JoinColumn(name = "stock_id")
     })
     private Set<Stock> stocks;
+
+    public Set<String> getStocksCode(){
+        return Collections.unmodifiableSet(this.stocks
+                                                .stream()
+                                                .map(Stock::getCode)
+                                                .map(code -> code.concat(".SA"))
+                                                .collect(Collectors.toSet()));
+    }
 
 }

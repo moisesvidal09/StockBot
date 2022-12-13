@@ -12,4 +12,6 @@ public interface IStockService extends CrudService<Stock> {
 
     Set<String> findAllDistinctCode();
 
+    List<StockDTO> getStocksPrice(Set<String> stocksCode);
+
 }

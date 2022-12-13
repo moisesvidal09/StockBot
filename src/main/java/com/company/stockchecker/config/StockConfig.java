@@ -14,4 +14,7 @@ public class StockConfig {
     @Value("${api.key}")
     private String apiKey;
 
+    @Value("${stock.price.url}")
+    private String stockPriceUrl;
+
 }

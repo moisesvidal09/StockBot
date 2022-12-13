@@ -5,6 +5,7 @@ import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.dto.NewsApiResponseDTO;
 import com.company.stockchecker.entity.dto.NewsDTO;
 import com.company.stockchecker.entity.dto.StockDTO;
+import com.company.stockchecker.entity.dto.StockPriceApiResponseDTO;
 import com.company.stockchecker.repository.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
@@ -77,6 +76,32 @@ public class StockService implements IStockService {
     public Set<String> findAllDistinctCode(){
         return stockRepository.findAllDistinctCode()
                 .orElse(Collections.emptySet());
+    }
+
+    @Override
+    public List<StockDTO> getStocksPrice(Set<String> stocksCode) {
+
+        List<StockDTO> stocks = new ArrayList<>();
+
+        stocksCode.forEach(stockCode -> {
+
+            String url = stockConfig.getStockPriceUrl() + stockCode + "&apikey=" + stockConfig.getApiKey();
+
+            StockPriceApiResponseDTO stockPriceApiResponseDTO
+                    = restService.makeRequest(url, "Connection", "keep-alive", StockPriceApiResponseDTO.class, HttpMethod.GET);
+
+            if(Objects.isNull(stockPriceApiResponseDTO) || stockPriceApiResponseDTO.getStockByDay().isEmpty())
+                return;
+
+            LocalDate now = LocalDate.now();
+            String today = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            StockDTO stockDTO = stockPriceApiResponseDTO.getStockByDay().get(today);
+            stockDTO.setSymbol(stockCode);
+            stocks.add(stockDTO);
+
+        });
+
+        return stocks;
     }
 
     @Override

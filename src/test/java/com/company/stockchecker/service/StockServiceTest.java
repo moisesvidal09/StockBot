@@ -2,27 +2,30 @@ package com.company.stockchecker.service;
 
 import com.company.stockchecker.config.StockConfig;
 import com.company.stockchecker.entity.Stock;
-import com.company.stockchecker.entity.dto.NewsApiResponseDTO;
-import com.company.stockchecker.entity.dto.NewsDTO;
-import com.company.stockchecker.entity.dto.SourceDTO;
-import com.company.stockchecker.entity.dto.StockDTO;
+import com.company.stockchecker.entity.dto.*;
 import com.company.stockchecker.repository.StockRepository;
+import com.company.stockchecker.util.MessageUtil;
 import com.company.stockchecker.util.TestUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -51,12 +54,12 @@ public class StockServiceTest {
    public void setup(){
 
       final Stock stock = Stock.builder()
-              .id(util.randomLong())
+              .id(TestUtil.randomLong())
               .code("BBAS3")
               .build();
 
       final Stock stock2 = Stock.builder()
-              .id(util.randomLong())
+              .id(TestUtil.randomLong())
               .code("MGLU3")
               .build();
 
@@ -165,6 +168,83 @@ public class StockServiceTest {
       Assert.assertNotNull(stockDTOS);
 
       verify(this.restService, times(1)).makeRequest(any(), any(), any(), any(), any());
+   }
+
+   @Test
+   public void shouldGetStockPriceFromAPI(){
+
+      String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AMER3.SA&apikey=4M6P5ET2MQVIWR31";
+
+      StockPriceApiResponseDTO stockDTO
+              = restService.makeRequest(url, "Connection", "keep-alive", StockPriceApiResponseDTO.class, HttpMethod.GET);
+
+      Assertions.assertAll("Verify return from api",
+              () -> Assert.assertNotNull(stockDTO),
+              () -> Assert.assertNotNull(stockDTO.getStockByDay()),
+              () -> Assert.assertFalse(stockDTO.getStockByDay().isEmpty()));
+   }
+
+   @Test
+   public void shouldGetStockPricesFromAPI(){
+
+      StockDTO stockDTO1Elet3 = StockDTO.builder()
+              .highDayPrice(new BigDecimal("9.46"))
+              .lowDayPrice(new BigDecimal("8.95"))
+              .closeDayPrice(new BigDecimal("9.07"))
+              .openDayPrice(new BigDecimal("9.15"))
+              .build();
+
+      StockDTO stockDTO2Elet3 = StockDTO.builder()
+              .highDayPrice(new BigDecimal("9.66"))
+              .lowDayPrice(new BigDecimal("8.91"))
+              .closeDayPrice(new BigDecimal("9.0"))
+              .openDayPrice(new BigDecimal("9.62"))
+              .build();
+
+      Map<String,StockDTO> mapElet3 = new HashMap<>();
+      mapElet3.put(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), stockDTO1Elet3);
+      mapElet3.put("2022-12-05", stockDTO2Elet3);
+
+      StockDTO stockDTO3Amer3 = StockDTO.builder()
+              .highDayPrice(new BigDecimal("9.46"))
+              .lowDayPrice(new BigDecimal("8.95"))
+              .closeDayPrice(new BigDecimal("9.07"))
+              .openDayPrice(new BigDecimal("9.15"))
+              .build();
+
+      StockDTO stockDTO4Amer3 = StockDTO.builder()
+              .highDayPrice(new BigDecimal("9.66"))
+              .lowDayPrice(new BigDecimal("8.91"))
+              .closeDayPrice(new BigDecimal("9.0"))
+              .openDayPrice(new BigDecimal("9.62"))
+              .build();
+
+      Map<String,StockDTO> mapAmer3 = new HashMap<>();
+      mapAmer3.put(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), stockDTO3Amer3);
+      mapAmer3.put("2022-12-05", stockDTO4Amer3);
+
+      StockPriceApiResponseDTO stockPriceApiResponseDTOElet3 = StockPriceApiResponseDTO.builder()
+              .stockByDay(mapElet3)
+              .build();
+
+      StockPriceApiResponseDTO stockPriceApiResponseDTOAmer3 = StockPriceApiResponseDTO.builder()
+              .stockByDay(mapAmer3)
+              .build();
+
+      when(stockConfig.getStockPriceUrl()).thenReturn("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=");
+      when(stockConfig.getApiKey()).thenReturn("4M6P5ET2MQVIWR31");
+      when(restService.makeRequest(eq("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=ELET3.SA&apikey=4M6P5ET2MQVIWR31"),
+              anyString(), anyString(), any(Class.class), any(HttpMethod.class))).thenReturn(stockPriceApiResponseDTOElet3);
+      when(restService.makeRequest(eq("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AMER3.SA&apikey=4M6P5ET2MQVIWR31"),
+              anyString(), anyString(), any(Class.class), any(HttpMethod.class))).thenReturn(stockPriceApiResponseDTOAmer3);
+
+      List<StockDTO> stocks = stockService.getStocksPrice(Stream.of("ELET3.SA", "AMER3.SA").collect(Collectors.toSet()));
+
+      Assertions.assertAll("Asserting stocks ",
+              () -> Assert.assertNotNull(stocks),
+              () -> Assert.assertFalse(stocks.isEmpty()));
+
+      System.out.println(MessageUtil.buildMessageStockPrice(stocks));
    }
 
 }

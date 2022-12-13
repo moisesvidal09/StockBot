@@ -1,6 +1,5 @@
 package com.company.stockchecker.bot.command;
 
-import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.User;
 import com.company.stockchecker.entity.dto.StockDTO;
 import com.company.stockchecker.service.IStockService;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Component
 public class StockGetCommand implements Command{
@@ -28,13 +27,10 @@ public class StockGetCommand implements Command{
 
         User user =  userService.getByChatId(update.getMessage().getChatId());
 
-        List<StockDTO> stocksNews = stockService.getStocksNews(
-                user.getStocks()
-                        .stream()
-                        .map(Stock::getCode)
-                        .collect(Collectors.toList())
-        );
+        Set<String> stocksCode = user.getStocksCode();
 
-        return MessageUtil.buildMessageToStockNews(stocksNews);
+        List<StockDTO> stock = stockService.getStocksPrice(stocksCode);
+
+        return MessageUtil.buildMessageToStockNews(stock);
     }
 }

@@ -2,6 +2,7 @@ package com.company.stockchecker.util;
 
 import com.company.stockchecker.entity.dto.StockDTO;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +36,41 @@ public class MessageUtil {
         });
 
         return sb.toString();
+    }
+
+    public static String buildMessageStockPrice(final List<StockDTO> stocks){
+
+        StringBuilder message = new StringBuilder();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        stocks.forEach(stock -> {
+
+            message.append(LocalDateTime.now().format(dateTimeFormatter));
+            message.append("\n\n");
+
+            message.append(stock.getSymbol());
+            message.append("\n\n");
+
+            message.append("Open Price -> ");
+            message.append(stock.getOpenDayPrice());
+            message.append("\n\n");
+
+            message.append("Close Price -> ");
+            message.append(stock.getCloseDayPrice());
+            message.append("\n\n");
+
+            message.append("Low Price -> ");
+            message.append(stock.getLowDayPrice());
+            message.append("\n\n");
+
+            message.append("High Price -> ");
+            message.append(stock.getHighDayPrice());
+            message.append("\n\n");
+            message.append("\n\n");
+
+        });
+
+        return message.toString();
     }
 
 }
