@@ -1,6 +1,8 @@
 package com.company.stockchecker.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity(name = "user_app")
+@DynamicInsert
+@DynamicUpdate
 public class User{
 
     @Id
