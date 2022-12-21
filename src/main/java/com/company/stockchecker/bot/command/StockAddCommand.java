@@ -5,7 +5,6 @@ import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.User;
 import com.company.stockchecker.exception.BotException;
 import com.company.stockchecker.service.IUserService;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -56,7 +55,7 @@ public class StockAddCommand implements Command {
         String firstName = update.getMessage().getFrom().getFirstName();
 
         return firstName + ", foram adicionadas as ações "
-                + Strings.join(stocksRequested, ',') + " com sucesso !"  ;
+                + String.join(", ", stocksRequested) + " com sucesso !"  ;
     }
 
     private void saveUser(Update update, Set<Stock> stocks){
