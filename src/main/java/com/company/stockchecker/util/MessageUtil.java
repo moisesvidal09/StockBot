@@ -2,12 +2,16 @@ package com.company.stockchecker.util;
 
 import com.company.stockchecker.entity.dto.StockDTO;
 
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class MessageUtil {
+
+    private static final NumberFormat currencyBRLFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
     public static String buildMessageToStockNews(final List<StockDTO> stocksNews){
 
@@ -43,28 +47,28 @@ public class MessageUtil {
         StringBuilder message = new StringBuilder();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        stocks.forEach(stock -> {
+        message.append(LocalDateTime.now().format(dateTimeFormatter));
+        message.append("\n\n");
 
-            message.append(LocalDateTime.now().format(dateTimeFormatter));
-            message.append("\n\n");
+        stocks.forEach(stock -> {
 
             message.append(stock.getSymbol());
             message.append("\n\n");
 
             message.append("Open Price -> ");
-            message.append(stock.getOpenDayPrice());
+            message.append(currencyBRLFormat.format(stock.getOpenDayPrice()));
             message.append("\n\n");
 
             message.append("Close Price -> ");
-            message.append(stock.getCloseDayPrice());
+            message.append(currencyBRLFormat.format(stock.getCloseDayPrice()));
             message.append("\n\n");
 
             message.append("Low Price -> ");
-            message.append(stock.getLowDayPrice());
+            message.append(currencyBRLFormat.format(stock.getLowDayPrice()));
             message.append("\n\n");
 
             message.append("High Price -> ");
-            message.append(stock.getHighDayPrice());
+            message.append(currencyBRLFormat.format(stock.getHighDayPrice()));
             message.append("\n\n");
             message.append("\n\n");
 
