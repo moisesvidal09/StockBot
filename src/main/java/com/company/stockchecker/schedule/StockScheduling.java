@@ -5,8 +5,11 @@ import com.company.stockchecker.config.SchedulingConfig;
 import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.User;
 import com.company.stockchecker.entity.dto.StockDTO;
-import com.company.stockchecker.service.*;
+import com.company.stockchecker.service.IStockService;
+import com.company.stockchecker.service.IUserService;
+import com.company.stockchecker.service.RestService;
 import com.company.stockchecker.util.MessageUtil;
+import com.company.stockchecker.util.StockUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +53,26 @@ public class StockScheduling {
 
         List<StockDTO> stocksNews = this.stockService.getStocksNews(new ArrayList<>(stocks));
 
-        new Thread(() -> sentStockNewsToAllUsers(users, stocksNews)).start();
+        new Thread(() -> sentStockNewsToUsers(users, stocksNews)).start();
+    }
+
+    @Scheduled(cron = "0 0 8 * * 1-5", zone = "America/Sao_Paulo")
+    private void notifyStockPriceAtEightTeenHourEveryDay(){
+
+        logger.info("Starting notify all users about stock price");
+
+        Set<String> allStockCodeFromDatabase = this.stockService.findAllDistinctCode();
+
+        allStockCodeFromDatabase = allStockCodeFromDatabase.stream()
+                                                        .map(StockUtil::addSouthAmericaSuffix)
+                                                        .collect(Collectors.toSet());
+
+        List<StockDTO> stocksFromAPI = this.stockService.getStocksPrice(allStockCodeFromDatabase);
+
+        List<User> users = this.userService.getAll();
+
+        users.forEach(user -> CompletableFuture.runAsync(() -> this.sentStockPriceToUsers(user, stocksFromAPI)));
+
     }
 
     // every 5 minutes, is used to prevent heroku from putting application to sleep mode,
@@ -60,7 +83,7 @@ public class StockScheduling {
                 "Connection", "keep-alive", String.class, HttpMethod.GET);
     }
 
-    private void sentStockNewsToAllUsers(final List<User> users, final List<StockDTO> stocksNews){
+    private void sentStockNewsToUsers(final List<User> users, final List<StockDTO> stocksNews){
 
         logger.info("Thread started");
 
@@ -80,6 +103,19 @@ public class StockScheduling {
 
                         this.stockBot.sendMessageTo(messageToUser, String.valueOf(user.getChatId()));
                 });
+    }
+
+    private void sentStockPriceToUsers(final User user, final List<StockDTO> stocks){
+
+        Set<String> userStocksSymbol = user.getStocksCode();
+
+        List<StockDTO> userStocksWithPrice = stocks.stream()
+                                            .filter(stock -> userStocksSymbol.contains(stock.getSymbol()))
+                                            .collect(Collectors.toList());
+
+        String messageToUser = MessageUtil.buildMessageStockPrice(userStocksWithPrice);
+
+        this.stockBot.sendMessageTo(messageToUser, String.valueOf(user.getChatId()));
 
     }
 }

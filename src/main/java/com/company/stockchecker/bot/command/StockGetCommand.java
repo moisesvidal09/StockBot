@@ -31,6 +31,6 @@ public class StockGetCommand implements Command{
 
         List<StockDTO> stock = stockService.getStocksPrice(stocksCode);
 
-        return MessageUtil.buildMessageToStockNews(stock);
+        return MessageUtil.buildMessageStockPrice(stock);
     }
 }

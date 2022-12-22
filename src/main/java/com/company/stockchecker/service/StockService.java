@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
@@ -93,9 +92,8 @@ public class StockService implements IStockService {
             if(Objects.isNull(stockPriceApiResponseDTO) || stockPriceApiResponseDTO.getStockByDay().isEmpty())
                 return;
 
-            LocalDate now = LocalDate.now();
-            String today = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            StockDTO stockDTO = stockPriceApiResponseDTO.getStockByDay().get(today);
+            String lastStockDate = new TreeMap<>(stockPriceApiResponseDTO.getStockByDay()).lastKey();
+            StockDTO stockDTO = stockPriceApiResponseDTO.getStockByDay().get(lastStockDate);
             stockDTO.setSymbol(stockCode);
             stocks.add(stockDTO);
 
