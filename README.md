@@ -1,5 +1,5 @@
 # Telegram Stock Bot
-This Telegram bot allows you to retrieve the latest stock prices for a given stock at the end of the day. Simply send a command to the bot with the stock ticker symbol, and it will retrieve the "High price", "Low Price", "Open Price", and "Close Price" of the stock.
+This Telegram bot allows you to retrieve the latest stock prices (i.e "High price", "Low Price", "Open Price", and "Close Price") for a given stock at the end of the day. Simply send a command to the bot with the stock ticker symbol, and it will be add to your wallet.
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
