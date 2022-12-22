@@ -89,10 +89,11 @@ public class StockService implements IStockService {
             StockPriceApiResponseDTO stockPriceApiResponseDTO
                     = restService.makeRequest(url, "Connection", "keep-alive", StockPriceApiResponseDTO.class, HttpMethod.GET);
 
-            if(Objects.isNull(stockPriceApiResponseDTO) || stockPriceApiResponseDTO.getStockByDay().isEmpty())
+            if(Objects.isNull(stockPriceApiResponseDTO) || Objects.isNull(stockPriceApiResponseDTO.getStockByDay())
+                    || stockPriceApiResponseDTO.getStockByDay().isEmpty())
                 return;
 
-            String lastStockDate = new TreeMap<>(stockPriceApiResponseDTO.getStockByDay()).lastKey();
+            String lastStockDate = stockPriceApiResponseDTO.getStockByDaySorted().lastKey();
             StockDTO stockDTO = stockPriceApiResponseDTO.getStockByDay().get(lastStockDate);
             stockDTO.setSymbol(stockCode);
             stocks.add(stockDTO);

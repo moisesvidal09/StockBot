@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Builder
 @AllArgsConstructor
@@ -18,10 +20,7 @@ public class StockPriceApiResponseDTO {
     @JsonProperty("Time Series (Daily)")
     private Map<String, StockDTO> stockByDay;
 
-    public Map<String, StockDTO> getStockByDay() {
-
-        this.stockByDay = StockUtil.sortMapByDateKey(this.stockByDay);
-
-        return Collections.unmodifiableMap(this.stockByDay);
+    public SortedMap<String, StockDTO> getStockByDaySorted() {
+        return Collections.unmodifiableSortedMap(new TreeMap<>(StockUtil.sortMapByDateKey(this.stockByDay)));
     }
 }
