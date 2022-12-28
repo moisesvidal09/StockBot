@@ -4,7 +4,6 @@ import com.company.stockchecker.config.StockConfig;
 import com.company.stockchecker.entity.Stock;
 import com.company.stockchecker.entity.dto.*;
 import com.company.stockchecker.repository.StockRepository;
-import com.company.stockchecker.util.MessageUtil;
 import com.company.stockchecker.util.TestUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -171,20 +170,6 @@ public class StockServiceTest {
    }
 
    @Test
-   public void shouldGetStockPriceFromAPI(){
-
-      String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AMER3.SA&apikey=4M6P5ET2MQVIWR31";
-
-      StockPriceApiResponseDTO stockDTO
-              = restService.makeRequest(url, "Connection", "keep-alive", StockPriceApiResponseDTO.class, HttpMethod.GET);
-
-      Assertions.assertAll("Verify return from api",
-              () -> Assert.assertNotNull(stockDTO),
-              () -> Assert.assertNotNull(stockDTO.getStockByDay()),
-              () -> Assert.assertFalse(stockDTO.getStockByDay().isEmpty()));
-   }
-
-   @Test
    public void shouldGetStockPricesFromAPI(){
 
       StockDTO stockDTO1Elet3 = StockDTO.builder()
@@ -243,8 +228,6 @@ public class StockServiceTest {
       Assertions.assertAll("Asserting stocks ",
               () -> Assert.assertNotNull(stocks),
               () -> Assert.assertFalse(stocks.isEmpty()));
-
-      System.out.println(MessageUtil.buildMessageStockPrice(stocks));
    }
 
 }
