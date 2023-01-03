@@ -2,6 +2,7 @@ package com.company.stockchecker.bot;
 
 import com.company.stockchecker.bot.command.Command;
 import com.company.stockchecker.bot.command.CommandEnum;
+import com.company.stockchecker.bot.command.StockHelpCommand;
 import com.company.stockchecker.bot.command.factory.CommandFactory;
 import com.company.stockchecker.config.TelegramConfig;
 import com.company.stockchecker.exception.BotException;
@@ -12,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Component
@@ -39,10 +41,13 @@ public class StockBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if(!update.hasMessage() && !update.getMessage().hasText())
-            return;
+        String chatId = Optional.ofNullable(update)
+                .map(updateBot -> updateBot.hasMessage() && updateBot.getMessage().hasText() ?
+                        updateBot.getMessage().getChatId() : updateBot.hasCallbackQuery() ?
+                        updateBot.getCallbackQuery().getMessage().getChatId() : null)
+                .map(String::valueOf)
+                .orElseThrow(() -> new BotException("Something went wrong with you request !"));
 
-        String chatId = String.valueOf(update.getMessage().getChatId());
         String response;
 
         try {
@@ -69,6 +74,7 @@ public class StockBot extends TelegramLongPollingBot {
         SendMessage msg = new SendMessage();
         msg.setText(message);
         msg.setChatId(chatId);
+        StockHelpCommand.buildHelpButtons(msg);
         try {
             execute(msg);
         } catch (TelegramApiException e) {
